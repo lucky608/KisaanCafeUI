@@ -5,7 +5,7 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import img1 from './images/img1.jpg'
+import img1 from "../images/img1.jpg"
 
 export const ProductCont =({ProductDetails,Addlabel, Editlabel, OnEditClick, OnAddClick})=> {
     

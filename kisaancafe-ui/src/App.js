@@ -1,9 +1,13 @@
 import './App.css';
-import { SharedButton } from './Components/shared components/SharedButton';
-import { ProductCont } from './Components/shared components/ProductCont';
-import Header from './Components/shared components/Header';
+import { SharedButton } from './Components/sharedcomponents/SharedButton';
+import { ProductCont } from './Components/sharedcomponents/ProductCont';
+import Header from './Components/sharedcomponents/Header';
+import { useDispatch } from 'react-redux';
+import { useEffect } from 'react';
+import { GetAllProducts } from './Components/sharedstore/slices/GetAllProducts';
 
 function App() {
+  const dispatch =useDispatch();
   const OnClick =()=>{
     console.log("clicked");
   }
@@ -19,6 +23,9 @@ const ProductDetails =[{
   MRP:"900",
   Technical:"h2o"
 }]
+    useEffect(() => {
+     dispatch(GetAllProducts())
+    }, [])
     
   return (
     <>

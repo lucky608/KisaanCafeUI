@@ -9,9 +9,9 @@ export const GetAllProducts = createAsyncThunk(
   "GetAllProducts",
   async () => {
     const response = await fetch(
-     "url here"
+     "https://jsonplaceholder.typicode.com/todos/1"
     );
-
+console.log(response);
     return response;
   }
 );
