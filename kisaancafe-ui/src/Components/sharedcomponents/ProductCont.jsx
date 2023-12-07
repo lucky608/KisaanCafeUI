@@ -7,30 +7,33 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import img1 from "../images/img1.jpg"
 
-export const ProductCont =({ProductDetails,Addlabel, Editlabel, OnEditClick, OnAddClick})=> {
-    
+export const ProductCont = ({ ProductDetails, Addlabel, Editlabel, OnEditClick, OnAddClick }) => {
+  // Create a image URL
+  const imageUrl = `data:image/png;base64,${ProductDetails.imageData}`;
+  console.log(imageUrl);
   return (
     <Card sx={{ maxWidth: 345 }}>
       <CardMedia
         sx={{ height: 140 }}
-        image={img1}
+        image={imageUrl}
         title="green iguana"
       />
+     
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-         {ProductDetails.Name}
+          {ProductDetails.name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-         Product Name : {ProductDetails.Name}
-         </Typography>
-         <Typography variant="body2" color="text.secondary">
-         Weight : {ProductDetails.Weight}
-         </Typography>
-         <Typography variant="body2" color="text.secondary">
-         MRP :{ProductDetails.MRP}
-         </Typography>
-         <Typography variant="body2" color="text.secondary">
-         Technical :{ProductDetails.Technical}
+          Product Name : {ProductDetails.name}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Weight : {ProductDetails.weight}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          MRP :{ProductDetails.prize}
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Technical :{ProductDetails.description}
         </Typography>
       </CardContent>
       <CardActions>

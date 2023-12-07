@@ -2,7 +2,7 @@ import './App.css';
 import { SharedButton } from './Components/sharedcomponents/SharedButton';
 import { ProductCont } from './Components/sharedcomponents/ProductCont';
 import Header from './Components/sharedcomponents/Header';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { GetAllProducts } from './Components/sharedstore/slices/GetAllProducts';
 
@@ -27,10 +27,12 @@ const ProductDetails =[{
      dispatch(GetAllProducts())
     }, [])
     
+    const products =useSelector((state)=>state.GetAllProducts.Data)
+  console.log(products);
   return (
     <>
     <SharedButton label="ADD PRODUCT" OnClick={OnClick}/> 
-    {ProductDetails.map((product)=>{
+      {products.map((product)=>{
       return <ProductCont Addlabel ="ADD" Editlabel ="EDIT"  OnAddClick={OnAddClick} OnEditClick={OnEditClick}
       ProductDetails={product}/>
     })}

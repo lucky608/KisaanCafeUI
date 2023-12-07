@@ -8,11 +8,25 @@ const initialState = {
 export const GetAllProducts = createAsyncThunk(
   "GetAllProducts",
   async () => {
-    const response = await fetch(
-     "https://jsonplaceholder.typicode.com/todos/1"
-    );
-console.log(response);
-    return response;
+    try {
+      const response = await fetch(
+        "https://localhost:7090/Product/GetAllProducts"
+      );
+
+      if (!response.ok) {
+        // Handle error if the response is not OK
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(data);
+
+      return data;
+    } catch (error) {
+      // Handle fetch error
+      console.error("Error fetching data:", error);
+      throw error;
+    }
   }
 );
 
@@ -28,7 +42,7 @@ const allProductDetails = createSlice({
     builder.addCase(
       GetAllProducts.fulfilled,
       (state, action) => {
-        state.Data = action.payload?.result ? [...action.payload.result] : [];
+        state.Data = action.payload;
       }
     );
   },
