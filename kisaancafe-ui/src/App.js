@@ -1,46 +1,60 @@
-import './App.css';
-import { SharedButton } from './Components/sharedcomponents/SharedButton';
-import { ProductCont } from './Components/sharedcomponents/ProductCont';
-import Header from './Components/sharedcomponents/Header';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { GetAllProducts } from './Components/sharedstore/slices/GetAllProducts';
+import "./App.css";
+import { SharedButton } from "./Components/sharedcomponents/SharedButton";
+import { ProductCont } from "./Components/sharedcomponents/ProductCont";
+import Header from "./Components/sharedcomponents/Header";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { GetAllProducts } from "./Components/sharedstore/slices/GetAllProducts";
+import ProductForm from "./Components/forms/ProductForm";
+import ProductFormHandler from "./Components/formHandlers/ProductFormHandler";
+import { useHandlers } from "./Components/handlers/handlers";
+import ProductContainer from "./Components/productContainer/ProductContainer";
 
 function App() {
-  const dispatch =useDispatch();
-  const OnClick =()=>{
+  const {
+    open,
+    handleClickOpen,
+    handleClose,
+    formData,
+    setFormData,
+    handleClickOpenAdd,
+    popupTitle,
+    OnDeleteProduct
+  } = useHandlers();
+  const dispatch = useDispatch();
+  const OnClick = () => {
     console.log("clicked");
-  }
-  const OnEditClick =()=>{
-    console.log("clicked for edit");
-  }
-  const OnAddClick =()=>{
+  };
+  const OnAddClick = () => {
     console.log("clicked for add");
-  }
-const ProductDetails =[{
-  Name:"Pesticides",
-  Weight:"1 kg",
-  MRP:"900",
-  Technical:"h2o"
-}]
-    useEffect(() => {
-     dispatch(GetAllProducts())
-    }, [])
-    
-    const products =useSelector((state)=>state.GetAllProducts.Data)
-  console.log(products);
+  };
+
+  useEffect(() => {
+    dispatch(GetAllProducts());
+  }, []);
+
+
   return (
     <>
-    <SharedButton label="ADD PRODUCT" OnClick={OnClick}/> 
-      {products.map((product)=>{
-      return <ProductCont Addlabel ="ADD" Editlabel ="EDIT"  OnAddClick={OnAddClick} OnEditClick={OnEditClick}
-      ProductDetails={product}/>
-    })}
-    
-    <Header />
+      <ProductFormHandler
+        FormComponent={ProductForm}
+        Title={popupTitle}
+        open={open}
+        handleClickOpen={handleClickOpen}
+        handleClose={handleClose}
+        formData={formData}
+        setFormData={setFormData}
+      />
+      {/* <ProductForm /> */}
+      <SharedButton label="ADD PRODUCT" OnClick={handleClickOpenAdd} />
+      <ProductContainer
+        OnAddClick={OnAddClick}
+        handleClickOpen={handleClickOpen}
+        OnDeleteProduct={OnDeleteProduct} />
+     
+      <Header />
     </>
-   
-);
+  );
 }
 
 export default App;

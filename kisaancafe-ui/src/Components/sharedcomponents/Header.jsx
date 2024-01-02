@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 function Header() {
   return (
@@ -25,8 +25,8 @@ function Header() {
           </li>
         </ul>
       </nav>
-      </>
+    </>
   );
 }
 
-export default Header
+export default Header;
