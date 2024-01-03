@@ -20,11 +20,10 @@ export const deleteProduct = createAsyncThunk(
             }
 
             const data = await response.json();
-            console.log(data);
-
+            console.log(data, "adadasd");
             // No need to dispatch any action here because deletion was successful
 
-            return data;
+            return productId;
         } catch (error) {
             // Handle fetch error
             console.error("Error fetching data:", error);

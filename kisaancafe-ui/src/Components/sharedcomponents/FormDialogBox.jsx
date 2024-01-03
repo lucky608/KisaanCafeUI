@@ -20,7 +20,6 @@ export default function FormDialogBox({
   formData,
   setFormData
 }) {
-  console.log(Title, "from box");
   const dispatch = useDispatch()
   const [productName, setProductName] = useState(formData.name);
   const [productDescription, setProductDescription] = useState(formData.description);
@@ -48,8 +47,8 @@ export default function FormDialogBox({
     setProductWeight: setProductWeight,
     setSelectedFile: setSelectedFile
   }
-
-  const convertImageToBase64Image = (file) => {
+  console.log(formData);
+  const convertImageToBase64Image = async (file) => {
     if (file) {
       const reader = new FileReader();
 
@@ -61,9 +60,7 @@ export default function FormDialogBox({
         base64String = base64String.substring(base64String.indexOf(',') + 1);
 
         setBase64Image(base64String);
-        console.log(base64String);
         if (Title === "Add Product") {
-          console.log(base64String);
           if (base64String) {
             const newProductDetails = {
               id: formData.id,
@@ -85,32 +82,38 @@ export default function FormDialogBox({
             description: productDescription,
             prize: productPrize,
             weight: productWeight,
-            imageData: base64String ? base64String : formData.imageData
+            imageData: base64String
           }
           await dispatch(updateProduct(updatedProductDetails))
           dispatch(GetAllProducts())
           setIsDirty(true)
         }
       };
-
       // Read the selected file as a data URL
       reader.readAsDataURL(file);
-
+    } else {
+      const updatedProductDetails = {
+        id: formData.id,
+        name: productName,
+        description: productDescription,
+        prize: productPrize,
+        weight: productWeight,
+        imageData: formData.imageData
+      }
+      await dispatch(updateProduct(updatedProductDetails))
+      dispatch(GetAllProducts())
+      setIsDirty(true)
     }
   };
 
   const onSaveClick = async () => {
-    if (selectedFile) {
-      convertImageToBase64Image(selectedFile)
-    }
+
+    convertImageToBase64Image(selectedFile)
 
     handleClose()
   }
   return (
     <React.Fragment>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Open form dialog
-      </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{Title}</DialogTitle>
         <DialogContent sx={{ width: "53.3vh" }}>

@@ -7,7 +7,6 @@ const initialState = {
 };
 
 export const GetAllProducts = createAsyncThunk("GetAllProducts", async () => {
-  console.log("heelo");
   try {
     const response = await fetch(
       "https://localhost:7090/Product/GetAllProducts"
@@ -19,7 +18,6 @@ export const GetAllProducts = createAsyncThunk("GetAllProducts", async () => {
     }
 
     const data = await response.json();
-    console.log(data);
 
     return data;
   } catch (error) {
@@ -43,11 +41,20 @@ const allProductDetails = createSlice({
         state.Data = action.payload;
       })
       .addCase(updateProduct.fulfilled, (state, action) => {
-        state.Data =[...state.Data]
-      })
-      .addCase(deleteProduct.fulfilled, (state, action) => {
         state.Data = [...state.Data]
       })
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        const deletedProductId = action.payload;
+        console.log(action.payload);
+        // Filter out the deleted product from the state
+        state.Data = state.Data.filter(product => product.id !== deletedProductId);
+        state.Data = [...state.Data]
+      })
+      .addDefaultCase((state, action) => {
+        // Handle other action types or log an error
+        console.error(`Unhandled action type: ${action.type}`);
+        return state;
+      });
   },
 
 });

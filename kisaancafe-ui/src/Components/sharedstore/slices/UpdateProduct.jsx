@@ -21,7 +21,6 @@ export const updateProduct = createAsyncThunk(
       }
 
       const data = await response.json();
-      console.log(data);
 
       // Dispatch the fetchProduct action after the update is successful
      // Assuming fetchProduct takes an ID as a parameter

@@ -6,6 +6,8 @@ import { deleteProduct } from "../sharedstore/slices/DeleteProduct";
 export const useHandlers = () => {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const [productId, setProductId] = useState()
   const [popupTitle, setPopupTitle] = useState("");
   const [formData, setFormData] = useState({
     name: "Product Name",
@@ -18,7 +20,6 @@ export const useHandlers = () => {
     setOpen(true);
     setPopupTitle("Edit Product")
     setFormData(e);
-    console.log(e);
   };
 
   const handleClickOpenAdd = (e) => {
@@ -30,17 +31,27 @@ export const useHandlers = () => {
       wight: null,
       description: "",
     });
-    console.log(e);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
   const OnDeleteProduct = async (e) => {
-    console.log(e);
-    await dispatch(deleteProduct(e))
-  //  dispatch(GetAllProducts())
+    setDeleteOpen(true);
+    setProductId(e)
   }
+
+  const handleDeleteClickOpen = () => {
+    setDeleteOpen(true);
+  };
+  const handleDeleteProduct = async () => {
+    await dispatch(deleteProduct(productId))
+    setDeleteOpen(false);
+  }
+  const handleDeleteClose = () => {
+    setDeleteOpen(false);
+  };
+
   return {
     open,
     handleClickOpen,
@@ -49,6 +60,10 @@ export const useHandlers = () => {
     setFormData,
     handleClickOpenAdd,
     popupTitle,
-    OnDeleteProduct
+    OnDeleteProduct,
+    handleDeleteClickOpen,
+    handleDeleteClose,
+    deleteOpen,
+    handleDeleteProduct
   };
 };

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { SharedButton } from "../sharedcomponents/SharedButton";
 
 const ProductForm = ({ formData, setFormData, productDetails }) => {
-    console.log(productDetails);
     // const [productName, setProductName] = useState(formData.name);
     // const [productDescription, setProductDescription] = useState(formData.description);
     // const [productPrize, setProductPrize] = useState(formData.prize);
