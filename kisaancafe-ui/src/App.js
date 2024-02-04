@@ -1,37 +1,31 @@
-import './App.css';
-import { SharedButton } from './Components/shared components/SharedButton';
-import { ProductCont } from './Components/shared components/ProductCont';
-import Header from './Components/shared components/Header';
+import "./App.css";
+import { SharedButton } from "./Components/sharedcomponents/SharedButton";
+import { ProductCont } from "./Components/sharedcomponents/ProductCont";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect } from "react";
+import { GetAllProducts } from "./Components/sharedstore/slices/GetAllProducts";
+import ProductForm from "./Components/forms/ProductForm";
+import ProductFormHandler from "./Components/formHandlers/ProductFormHandler";
+import { useHandlers } from "./Components/handlers/handlers";
+import ProductContainer from "./Components/productContainer/ProductContainer";
+import DeleteDialogBox from "./Components/sharedcomponents/DeleteDialogBox";
+import { NavigationBar } from "./Components/navigation/NavigationBar";
+import BaseRoute from "./Components/routes/BaseRoute";
+import { Footer } from "./Components/navigation/Footer";
 
 function App() {
-  const OnClick =()=>{
-    console.log("clicked");
-  }
-  const OnEditClick =()=>{
-    console.log("clicked for edit");
-  }
-  const OnAddClick =()=>{
-    console.log("clicked for add");
-  }
-const ProductDetails =[{
-  Name:"Pesticides",
-  Weight:"1 kg",
-  MRP:"900",
-  Technical:"h2o"
-}]
-    
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(GetAllProducts());
+    console.log("called");
+  }, []);
   return (
     <>
-    <SharedButton label="ADD PRODUCT" OnClick={OnClick}/> 
-    {ProductDetails.map((product)=>{
-      return <ProductCont Addlabel ="ADD" Editlabel ="EDIT"  OnAddClick={OnAddClick} OnEditClick={OnEditClick}
-      ProductDetails={product}/>
-    })}
-    
-    <Header />
+      <NavigationBar />
+      <BaseRoute />
+      <Footer />
     </>
-   
-);
+  );
 }
 
 export default App;
