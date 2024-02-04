@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import GetAllProducts from "../sharedstore/slices/GetAllProducts";
 import { useDispatch } from "react-redux";
 import { deleteProduct } from "../sharedstore/slices/DeleteProduct";
+import { GetAllProductsFromCart } from "../sharedstore/slices/CartProduct";
 
 export const useHandlers = () => {
   const dispatch = useDispatch();
@@ -32,7 +33,10 @@ export const useHandlers = () => {
       description: "",
     });
   };
-
+ const handleAddToCart=(e)=>{
+  console.log(e,"added to cart");
+  dispatch(GetAllProductsFromCart({...e,qty:1}))
+ }
   const handleClose = () => {
     setOpen(false);
   };
@@ -64,6 +68,7 @@ export const useHandlers = () => {
     handleDeleteClickOpen,
     handleDeleteClose,
     deleteOpen,
-    handleDeleteProduct
+    handleDeleteProduct,
+    handleAddToCart
   };
 };

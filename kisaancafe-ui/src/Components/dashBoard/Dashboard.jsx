@@ -24,7 +24,8 @@ function DashBoard() {
         handleDeleteClickOpen,
         handleDeleteClose,
         deleteOpen,
-        handleDeleteProduct
+        handleDeleteProduct,
+        handleAddToCart
     } = useHandlers();
 
     return (
@@ -36,7 +37,7 @@ function DashBoard() {
             </Grid>
             <ProductContainer
                 handleClickOpen={handleClickOpen}
-                OnAddToCartClick={handleClickOpenAdd}
+                OnAddToCartClick={handleAddToCart}
                 OnDeleteProduct={OnDeleteProduct}
             />
             <ProductFormHandler

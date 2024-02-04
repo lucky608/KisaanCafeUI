@@ -7,8 +7,11 @@ import ShopLogo from "../images/ShopLogo.png"
 import UserProfileIcon from "../images/UserProfileIcon.jpg"
 import addToCartImage from "../images/addToCart.png"
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 export const NavigationBar = (
     ({ showDropDown = true }) => {
+        const CartData = useSelector((state) => state.AllProductInCart.CartData)
+        const [productCount, setProductCount] = useState(0);
         const [showProfile, setShowProfile] = useState(false);
         const handleClickOutside = (event) => {
             setShowProfile(false);
@@ -23,7 +26,11 @@ export const NavigationBar = (
             };
         }, [showProfile]);
 
-          const navigate = useNavigate();
+        useEffect(() => {
+            setProductCount(CartData?.length)
+        }, [CartData])
+
+        const navigate = useNavigate();
         return (
             <CustomTopBar>
                 <AppBar className="custom-topBar" data-testid="navbar">
@@ -33,7 +40,7 @@ export const NavigationBar = (
                                 src={ShopLogo}
                                 alt="WebLogo"
                                 onClick={() => {
-                                      navigate("/");
+                                    navigate("/");
                                 }}
                             />
                         </Typography>
@@ -45,10 +52,29 @@ export const NavigationBar = (
                             <IconButton
                                 className="dropdown-profile"
                                 onClick={(e) => {
-                                    e.stopPropagation();
-                                    setShowProfile(!showProfile);
+                                    navigate("/cart");
                                 }}
                             >
+                                {productCount > 0 && <p style={{
+                                    color: "#141313",
+                                    margin: "6px",
+                                    position: "absolute",
+                                    top: "5px",
+                                    right: "0px",
+                                    height: "6px",
+                                    width: "7px",
+                                    border: "1px solid red",
+                                    borderRadius: "50%",
+                                    padding: "4px",
+                                    backgroundColor: "red",
+                                    fontSize: "small",
+                                    textAlign: "center",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                }}>
+                                    {productCount}
+                                </p>}
                                 <img
                                     src={addToCartImage}
                                     alt="addToCartImage"
@@ -64,7 +90,7 @@ export const NavigationBar = (
                                 }}
                             >
                                 <img
-                                     src={UserProfileIcon}
+                                    src={UserProfileIcon}
                                     alt="userProfileIcon"
                                     className={classes.userProfileIcon}
                                     title="Profile"

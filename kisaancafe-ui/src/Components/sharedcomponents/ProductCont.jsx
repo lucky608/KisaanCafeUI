@@ -9,6 +9,9 @@ import { IconButton } from "@mui/material";
 import DeleteImg from "../sharedcomponents/Images/delete.png";
 import EditImg from "../sharedcomponents/Images/edit.png";
 import GetAllProducts from "../sharedstore/slices/GetAllProducts";
+import { useDispatch, useSelector } from "react-redux";
+import { decreaseCartData, increaseCartData } from "../sharedstore/slices/CartProduct";
+import AddRemoveContainer from "./AddRemoveContainer";
 
 export const ProductCont = ({
   ProductDetails,
@@ -18,15 +21,18 @@ export const ProductCont = ({
   OnAddToCartClick,
   OnDeleteProduct
 }) => {
+  const dispatch = useDispatch();
   const [expanded, setExpanded] = React.useState(false);
+  const [productQty, setProductQty] = React.useState(0);
 
+  const [isAddedIntoCart, setIsAddedIntoCart] = React.useState(false);
+  const CartData = useSelector((state) => state.AllProductInCart.CartData)
   // Create an image URL
   const imageUrl = `data:image/png;base64,${ProductDetails.imageData}`;
 
   const OnEditClick = (e) => {
     onClick(e);
   };
-
   const OnDelete = async () => {
     await OnDeleteProduct(ProductDetails.id);
   };
@@ -34,6 +40,29 @@ export const ProductCont = ({
   const toggleDescription = () => {
     setExpanded(!expanded);
   };
+
+  const OnAddClick = (e) => {
+    OnAddToCartClick(e);
+  };
+  const onAddClick = (productId) => {
+    console.log(productId, "add click");
+    dispatch(increaseCartData(productId))
+  }
+
+  const onRemoveClick = (productId) => {
+    console.log("remove click");
+    dispatch(decreaseCartData(productId))
+  }
+  const ProductDetailsFromCart = CartData.find(item => item.id === ProductDetails.id);
+  React.useEffect(() => {
+    const isDataInCart = CartData.some(item => item.id === ProductDetails.id);
+    if (isDataInCart) {
+      setIsAddedIntoCart(true)
+    } else {
+      setIsAddedIntoCart(false)
+    }
+    console.log(CartData, "cartDataUpdated");
+  }, [CartData])
 
   return (
     <Card sx={{ maxWidth: 345, position: "relative" }}>
@@ -55,7 +84,7 @@ export const ProductCont = ({
         <Typography variant="body2" color="text.secondary">
           Technical: {expanded ? ProductDetails.description : `${ProductDetails.description.slice(0, 25)}`}
           {ProductDetails.description.length > 25 && (
-            <Button sx={{height:"20px",fontSize:"0.700rem"}} onClick={toggleDescription}>
+            <Button sx={{ height: "20px", fontSize: "0.700rem" }} onClick={toggleDescription}>
               {expanded ? "Read Less" : "Read More"}
             </Button>
           )}
@@ -81,9 +110,15 @@ export const ProductCont = ({
         </IconButton>
       </CardActions>
       <CardActions sx={{ justifyContent: 'flex-end', zIndex: 0 }}>
-        <Button size="small" onClick={OnAddToCartClick}>
+        {isAddedIntoCart && ProductDetailsFromCart ? (<AddRemoveContainer
+          onAddClick={onAddClick}
+          onRemoveClick={onRemoveClick}
+          productUnit={ProductDetailsFromCart.qty}
+          productId={ProductDetails.id}
+          deleteHide={true}
+        />) : (<Button size="small" onClick={() => OnAddClick(ProductDetails)}>
           {Addlabel}
-        </Button>
+        </Button>)}
       </CardActions>
     </Card>
   );
