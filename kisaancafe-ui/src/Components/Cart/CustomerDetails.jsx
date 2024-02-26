@@ -1,8 +1,64 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, FormControl, Grid, IconButton, Input, InputAdornment, InputLabel, MenuItem, Select, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { SharedButton } from "../sharedcomponents/SharedButton";
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
+import { useDispatch, useSelector } from "react-redux";
+import { resetCart } from "../sharedstore/slices/CartProduct";
 
+const generatePDF = async (data,fullName,fullAddress,phoneNumber,amountPaid,amountLeft,paymentMode,totalAmountToPay)  => {
+    const doc = new jsPDF();
+  
+    // Add content to PDF
+    doc.text('Invoice Details', 90, 10,{ fontSize: 16 });
+    doc.setFontSize(10); // Set the font size to 10
+ // doc.text(`Invoice ID: ${data.invoiceId}`, 20, 20, { color: "red" });
+    doc.text(`Customer: ${fullName}`, 20, 30,{ fontSize: 10 });
+    doc.text(`Address: ${fullAddress}`, 20, 40,{ fontSize: 10 });
+    doc.text(`Phone: ${phoneNumber}`, 20, 50,{ fontSize: 10 });
+    doc.text(`Payment Mode: ${paymentMode}`, 20, 60,{ fontSize: 10 });
+   //make a horizontal line here
+   const startYForTable = doc.autoTable.previous.finalY;
+  
+   // Make a horizontal line based on the startY for the table
+  
+    // Add table for products
+    const columns = ['ID', 'Name', 'Description', 'Price/Unit', 'Weight/Unit', 'Qty','Total Weight','Total Price'];
+    const rows = data.map((product) => [
+      product.id,
+      product.name,
+      product.description,
+      product.prize,
+      product.weight,
+      product.qty,
+      product.weight*product.qty,
+      product.prize*product.qty
+    ]);
+  
+    doc.autoTable({
+      head: [columns],
+      body: rows,
+      startY: 70,
+    });
+   
+    doc.setLineWidth(0.5); // Set line width
+    doc.line(20, doc.autoTable.previous.finalY, 190, doc.autoTable.previous.finalY);
+    // Add total amounts
+    doc.setFontSize(16);
+    doc.setFont('bold');
+    doc.text(`Total Amount: Rs-${totalAmountToPay}/-`, 20, doc.autoTable.previous.finalY + 10);
+    doc.text(`Amount Paid: Rs-${amountPaid}/-`, 20, doc.autoTable.previous.finalY + 20);
+    doc.text(`Amount Left: Rs-${amountLeft}/-`, 20, doc.autoTable.previous.finalY + 30);
+    doc.setLineWidth(0.5); // Set line width
+    doc.line(20, doc.autoTable.previous.finalY+40, 190, doc.autoTable.previous.finalY+40);
+  
+    // Save or open the PDF
+    doc.save('invoice.pdf');
+  };
+
+  
 const CustomerDetails = ({ isCheckOut, setIsCheckOut, totalAmountToPay }) => {
+    const dispatch = useDispatch();
     const [open, setOpen] = useState(isCheckOut);
     const [fullName, setFullName] = useState('');
     const [fullAddress, setFullAddress] = useState('');
@@ -11,6 +67,7 @@ const CustomerDetails = ({ isCheckOut, setIsCheckOut, totalAmountToPay }) => {
     const [amountLeft, setAmountLeft] = useState(totalAmountToPay - amountPaid);
     const [paymentMode, setPaymentMode] = useState('');
     console.log(isCheckOut);
+    const CartData = useSelector((state) => state.AllProductInCart.CartData)
 
     const onPaymentModeChange = (event) => {
         setPaymentMode(event.target.value);
@@ -35,8 +92,11 @@ const CustomerDetails = ({ isCheckOut, setIsCheckOut, totalAmountToPay }) => {
         setOpen(false);
         setIsCheckOut(false)
     }
-    const onSaveClick = () => {
-        
+    const onOrderConfirm = async () => {
+       await generatePDF(CartData,fullName,fullAddress,phoneNumber,amountPaid,amountLeft,paymentMode,totalAmountToPay)
+       dispatch(resetCart())
+        setIsCheckOut(false)
+        setOpen(false);
     }
 
     return (
@@ -122,7 +182,7 @@ const CustomerDetails = ({ isCheckOut, setIsCheckOut, totalAmountToPay }) => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Back</Button>
-                    <Button sx={{ backgroundColor:"#4EE337"}} onClick={onSaveClick}>Complete</Button>
+                    <Button sx={{ backgroundColor:"#4EE337"}} onClick={onOrderConfirm}>Complete</Button>
                 </DialogActions>
             </Dialog>
         </React.Fragment>
