@@ -17,7 +17,6 @@ function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(GetAllProducts());
-    console.log("called");
   }, []);
   return (
     <>
